@@ -190,6 +190,314 @@ You can browse these on GitHub without installing anything, or run the tool your
 python austroview.py examples/DataLog_20240819.ae3
 ```
 
+## LiveView Recording
+
+### What is LiveView?
+
+The AE300 Wizard's **LiveView** feature lets you monitor and record ECU data in real time while connected to the aircraft on the ground. Unlike the data logger (which records 16 channels at 1 Hz automatically during every engine run), LiveView gives you access to up to **170 signals** covering nearly every aspect of the engine's operation -- from individual cylinder injection timing to turbocharger control, propeller governor internals, and more.
+
+LiveView recordings are saved as `LiveView_YYYYMMDD.ae3` files using the same encrypted format as hex dumps. AustroView does not yet parse LiveView files, but support is planned for a future version.
+
+### How to Record a LiveView Session
+
+**Requirements**: Same setup as downloading hex dumps -- PCAN-USB dongle connected to the ECU diagnostic port, AE300 Wizard running on a Windows PC. Engine can be running or stopped.
+
+**Steps** (AE300 Wizard Manual, Section 8.3):
+
+1. **Connect** the PCAN-USB dongle and launch AE300 Wizard
+2. **Press Connect ECU** to establish communication
+3. **Select the "LiveView" tab**
+4. **Choose your signals** -- click signal names from the list to add them to the recording
+5. **Set the sample interval** -- from 0.1 seconds (10 Hz, fastest) to 3 seconds
+6. **Click Record** to start capturing data
+7. **Click Stop** when finished -- the file is saved as `LiveView_YYYYMMDD.ae3`
+
+### Standard vs Expert Mode
+
+| Mode     | Signals Available | Access Level |
+|----------|------------------:|--------------|
+| Standard | Up to 52 per ECU  | Maintenance mode (standard dongle) |
+| Expert   | Up to 158 per ECU | Qualified Maintenance mode |
+
+Expert mode unlocks the full signal set including internal governor states, injection details, and diagnostic flags. Standard mode covers the most commonly needed parameters.
+
+> **Important**: LiveView is for **ground testing only**. The AE300 Wizard Manual states that LiveView must not be used during flight (Section 8.3).
+
+### Dual-ECU Recording
+
+The AE300 has dual ECUs (A and B). LiveView can record signals from both ECUs simultaneously. Each ECU's data is stored separately in the recording file.
+
+### Complete Signal Reference (170 Signals)
+
+Below is the full list of signals available through LiveView, organized by category. The **Unit** column shows the physical unit after conversion from the ECU's raw values.
+
+#### Pressures & Fluid Levels
+
+| Signal | Unit |
+|--------|------|
+| Atmospheric (barometric) pressure | hPa |
+| Atmospheric pressure, linearized | hPa |
+| Atmospheric pressure, raw signal | mV |
+| Boost pressure, filtered | hPa |
+| Boost pressure, phys value | hPa |
+| Boost pressure, raw sensor value | mV |
+| Engine oil pressure | hPa |
+| Engine oil level | mm |
+| Engine oil level, raw sensor value | mm |
+| Fuel pressure | hPa |
+| Fuel pressure, raw sensor value | mV |
+| Rail pressure, peak value (last 10 ms) | bar |
+| Rail pressure, sensor raw voltage | mV |
+
+#### Temperatures
+
+| Signal | Unit |
+|--------|------|
+| Coolant temperature | deg C |
+| Coolant temperature, rate of change | deg C/s |
+| Coolant temperature, raw sensor value | mV |
+| ECU temperature, with default | deg C |
+| ECU temperature, without default | deg C |
+| ECU temperature, raw sensor value | mV |
+| Engine oil temperature | deg C |
+| Engine oil temperature, raw sensor value | deg C |
+| Fuel temperature | deg C |
+| Fuel temperature, raw sensor value | mV |
+| Fuel temperature, with substitute reaction | deg C |
+| Gearbox oil temperature | deg C |
+| Gearbox oil temperature, raw sensor value | mV |
+| Intake air temperature | deg C |
+| Intake air temperature, rate of change | deg C/s |
+| Intake air temperature, raw sensor value | mV |
+
+#### Engine Speed & Position
+
+| Signal | Unit |
+|--------|------|
+| Camshaft, current angular position | deg CrS |
+| Camshaft-Crankshaft angular position difference | deg CrS |
+| Crankshaft, current increment speed | rpm |
+| Crankshaft, average speed | rpm |
+| Crankshaft, current segment speed | rpm |
+| Crankshaft, current angular position | deg CrS |
+| Engine speed, average | rpm |
+| Engine speed, average acceleration | rpm/s |
+| Engine speed, current | rpm |
+| Engine speed, phase wheel | rpm |
+| Propeller speed | rpm |
+| Propeller speed, set point | rpm |
+
+#### Power, Torque & Load
+
+| Signal | Unit |
+|--------|------|
+| Engine power, calculated | W |
+| Engine power, ratio to max power | % |
+| Fuel consumption | l/h |
+| Starting system, starting torque | Nm |
+| Torque desired, after limitation | Nm |
+| Torque, actual gearbox input | Nm |
+| Torque, desired for minimum injection qty | Nm |
+| Torque, inner torque desired value | Nm |
+| Torque, inner torque set value | Nm |
+| Torque, limitation | Nm |
+| Torque, set value after limitation | Nm |
+
+#### Fuel Injection
+
+| Signal | Unit |
+|--------|------|
+| Energizing time, average per cylinder | us |
+| Injection characteristic, actual value | bin |
+| Injection mass, engine speed limitation | mm3/cyc |
+| Injection mass, max allowed | mm3/hub |
+| Injection mass, smoke limitation | mm3/cyc |
+| Injection, current quantity | mm3/cyc |
+| Injection, Pilot 1 release state | bin |
+| Injection, Pilot 2 release state | bin |
+
+#### Metering Unit (Fuel)
+
+| Signal | Unit |
+|--------|------|
+| Metering unit, actual current | mA |
+| Metering unit, current governor deviation | mA |
+| Metering unit, duty cycle | % |
+| Metering unit, duty cycle set value | % |
+| Metering unit, electrical current set point | mA |
+
+#### Boost Pressure Control
+
+| Signal | Unit |
+|--------|------|
+| Boost pressure actuator, duty cycle | % |
+| Boost pressure, governor deviation | hPa |
+| Boost pressure, governor output | % |
+| Boost pressure, precontrol value | % |
+| Boost pressure, regulation switch | bin |
+| Boost pressure, set point | hPa |
+| Boost pressure, set point without limits | hPa |
+| Boost pressure, temperature corrected | hPa |
+| BPA, coordinator output | % |
+| BPA, correction value | % |
+
+#### Propeller Governor
+
+| Signal | Unit |
+|--------|------|
+| Propeller gov. actuator, duty cycle | % |
+| Propeller gov. actuator, endstop status | - |
+| Propeller gov. actuator, endstop voltage | mV |
+| Propeller gov. actuator, filtered voltage | mV |
+| Propeller gov. actuator, raw voltage | mV |
+| Propeller governor, current speed deviation | rpm |
+
+#### Rail Pressure Control
+
+| Signal | Unit |
+|--------|------|
+| PCR, current working sphere | - |
+| PCR, governor shut off state | - |
+| PCV, duty cycle | % |
+| PCV, duty cycle set point | % |
+| PCV, electric current governor deviation | mA |
+| PCV, electric current set point | mA |
+| PCV, filtered electric current | mA |
+| PCV, filtered electric current set point | mA |
+| Rail pressure, governor deviation | bar |
+| Rail pressure, governor state | - |
+| Rail pressure, governor type | bin |
+| Rail pressure, set point | bar |
+
+#### Idle Governor
+
+| Signal | Unit |
+|--------|------|
+| Idle governor, limited output | Nm |
+| Idle governor, set point speed | rpm |
+| Idle governor, state | - |
+| Idle governor, torque demanded | Nm |
+
+#### Power Lever
+
+| Signal | Unit |
+|--------|------|
+| Power lever position | % |
+| Power lever position, sensor 1 | % |
+| Power lever position, sensor 2 | % |
+| Power lever sensor 1, raw value | mV |
+| Power lever sensor 2, raw value | mV |
+
+#### Electrical System
+
+| Signal | Unit |
+|--------|------|
+| Actuator supply voltage, raw | mV |
+| Battery voltage | V |
+| Battery voltage, raw ADC value | mV |
+| Battery voltage correction factor | - |
+| Voter relay, highside raw voltage | mV |
+| Voter relay, linearized differential voltage | mV |
+| Voter relay, lowside raw voltage | mV |
+| Sensor supply error flags | bin |
+
+#### Engine State & Starting
+
+| Signal | Unit |
+|--------|------|
+| Afterrun, EEPROM storage status | - |
+| Afterrun, internal state | - |
+| Engine master switch, raw signal value | - |
+| Engine master switch, state | - |
+| Engine state, combined flags | bin |
+| Engine, current state | bin |
+| Engine, overrun state | - |
+| Engine position, synchronisation state | - |
+| Starting system, status | - |
+| Squat switch (WoW), raw signal value | - |
+| Squat switch (WoW), state | bin |
+| Power stage diag status | bin |
+
+#### Self-Test
+
+| Signal | Unit |
+|--------|------|
+| Selftest switch, raw signal value | - |
+| Selftest switch, state | - |
+| Selftest, ECU test internal state | - |
+| Selftest, internal state | - |
+| Selftest, propeller self test error flags | bin |
+| Selftest, propeller test phase | - |
+| Selftest, release condition flags | bin |
+| Selftest, timeout flags | bin |
+| Selftest, torque demanded | Nm |
+
+#### ECU Information & Run Times
+
+| Signal | Unit |
+|--------|------|
+| ECU coding ID | - |
+| ECU run time, accumulated engine control | s |
+| ECU run time, accumulated power-on | s |
+| ECU run time, since engine master on | s |
+| ECU state (active/passive) | bin |
+| ECU, proposed active ECU | - |
+| Engine run time, accumulated | s |
+| Data logger, release status | bin |
+| Errors of ECU | - |
+| Errors of twin ECU | - |
+| Fault Code Memory, number of entries | - |
+| Pre-Supply pump, output signal | - |
+| Source of last reset | - |
+
+#### Real-Time Clock
+
+| Signal | Unit |
+|--------|------|
+| RTC date, as YYMMDD | - |
+| RTC time, as HHMMSS | - |
+| RTC error flags (CTRL2) | bin |
+| RTC, current year | - |
+| RTC, current month | - |
+| RTC, current day | - |
+| RTC, current hours | - |
+| RTC, current minute | - |
+| RTC, current second | - |
+
+#### CAN Bus & Monitoring
+
+| Signal | Unit |
+|--------|------|
+| CAN monitoring, fade out state | bin |
+| CAN monitoring, state | bin |
+| Caution lamp, status | bin |
+| Main relay monitoring, current state | bin |
+| Memory monitoring, status | bin |
+
+#### CAN Bus Mirror Signals
+
+These signals are received from the other ECU (or cockpit displays) via the CAN bus. They mirror the primary sensor readings as seen by the aircraft's avionics:
+
+| Signal | Unit |
+|--------|------|
+| CAN, battery voltage | V |
+| CAN, caution lamp status | bin |
+| CAN, coolant temperature | deg C |
+| CAN, ECU active/passive | bin |
+| CAN, engine performance | % |
+| CAN, fuel flow | l/h |
+| CAN, fuel pressure warning | bin |
+| CAN, gearbox oil temperature | deg C |
+| CAN, oil pressure | hPa |
+| CAN, oil temperature | deg C |
+| CAN, propeller speed | rpm |
+
+#### Other
+
+| Signal | Unit |
+|--------|------|
+| AUX signal | - |
+
 ## FAQ
 
 **What aircraft does this work with?**
