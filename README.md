@@ -213,7 +213,9 @@ python austroview.py examples/DataLog_20240819.ae3
 
 The AE300 Wizard's **LiveView** feature lets you monitor and record ECU data in real time while connected to the aircraft on the ground. Unlike the data logger (which records 16 channels at 1 Hz automatically during every engine run), LiveView gives you access to up to **170 signals** covering nearly every aspect of the engine's operation -- from individual cylinder injection timing to turbocharger control, propeller governor internals, and more.
 
-LiveView recordings are saved as `LiveView_YYYYMMDD.ae3` files using the same encrypted format as hex dumps. AustroView does not yet parse LiveView files, but support is planned for a future version.
+LiveView recordings are saved as `LiveView_YYYYMMDD.ae3` files using the same encrypted format as hex dumps.
+
+> **Coming Soon**: LiveView file parsing is actively being developed as the next AustroView feature. Once available, you'll be able to convert LiveView recordings into CSV just like hex dump files.
 
 ### How to Record a LiveView Session
 
@@ -590,7 +592,7 @@ A single hex dump can contain weeks or months of flight data depending on flight
 The AE300 has dual ECUs (A and B). Each ECU records its own data log independently. You would get separate `.ae3` files for each ECU.
 
 **What about the LiveView recordings?**
-The AE300 Wizard also has a **LiveView** feature (Section 8.3) that can record up to 52 signals per ECU in standard mode or 158 signals in expert mode, at intervals as fast as 0.1 seconds. These recordings are saved as `LiveView_YYYYMMDD.ae3` files. AustroView does not currently parse LiveView files, but support could be added in a future version since they use the same file format. Note that LiveView requires a live connection to the ECU and is for **ground testing only** -- the Wizard manual states that using it during flight is not permitted.
+The AE300 Wizard also has a **LiveView** feature (Section 8.3) that can record up to 52 signals per ECU in standard mode or 158 signals in expert mode, at intervals as fast as 0.1 seconds. These recordings are saved as `LiveView_YYYYMMDD.ae3` files. **LiveView parsing is the next feature being added to AustroView** -- see the [LiveView Recording](#liveview-recording) section for details on all 170 available signals. Note that LiveView requires a live connection to the ECU and is for **ground testing only**.
 
 **Can I use this data for maintenance decisions?**
 This data can help you and your mechanic understand engine trends and behavior. However, **all maintenance decisions must be made by qualified personnel** using approved procedures and documentation. See the disclaimer at the top of this page.
