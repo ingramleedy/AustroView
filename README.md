@@ -115,16 +115,29 @@ Options:
 
 ## How to Collect .ae3 Files
 
-The `.ae3` hex dump files are created using the **AE300 Wizard** software provided by Austro Engine. Here's the general process:
+The `.ae3` hex dump files are created using the **AE300 Wizard** software provided by Austro Engine (document E4.08.09, Rev 14). Here's the process:
 
-1. **Connect** the USB diagnostic dongle to the ECU diagnostic port on the aircraft (located in the engine compartment)
-2. **Launch** the AE300 Wizard software on a Windows laptop
-3. **Read Hex Dump** -- use the "Read HexDump" function to download the data logger contents from the ECU's flash memory
-4. **Save** -- the Wizard saves the file as a `.ae3` file (e.g., `DataLog_20240819.ae3`)
+### What You Need
 
-The hex dump contains all recorded engine sessions stored in the ECU's flash memory. Depending on flight activity, this can include dozens of sessions spanning weeks or months.
+- **AE300 Wizard software** -- available from the [Diamond Aircraft Partners Portal](https://partners.diamondaircraft.com/s/files) under Engine Documentation & Software > AE300-Wizard
+- **USB/CAN diagnostic dongle** -- the PEAK PCAN-USB adapter included with the Wizard package. This also acts as a license dongle (Maintenance or Qualified Maintenance mode)
+- **Windows PC** -- Windows 7 SP1 / 10 / 11, with .NET Framework 4.0
+- **Ground power recommended** -- full data logger downloads can take up to 20 minutes per ECU and will drain the aircraft battery
 
-> **Note**: The AE300 Wizard software is typically available through Diamond Aircraft service centers or Austro Engine authorized maintenance organizations. Access to the ECU diagnostic port may require cowling removal.
+### Download Steps (AE300 Wizard Manual, Section 8.2.3)
+
+1. **Set up the aircraft** -- connect ground power, disable fuel pumps and alternator(s), engine must be stopped
+2. **Connect** the USB/CAN dongle to the ECU diagnostic port (9-pin CAN connector in the engine compartment) and to your laptop's USB port
+3. **Launch** AE300 Wizard and press **Connect ECU**
+4. **Select the "Engine Logs" tab** and click **Save DataLog**
+5. **Choose a filename** -- the Wizard suggests `DataLog_YYYYMMDD.ae3`
+6. **Save** -- the file is stored in `My Documents\Austro Engine\AE300-Wizard\HexDump`
+
+For a quick download of just the most recent flights, use **Save DataLog Fraction** (Section 8.2.4) and specify the number of recent flight hours.
+
+> **Note**: The AE300 Wizard and dongle are available through Diamond Aircraft service centers or Austro Engine authorized maintenance organizations. The software can also be installed without a dongle for **offline analysis** of previously downloaded files (Section 4.5, 7.1).
+
+The hex dump contains all recorded engine sessions stored in the ECU's flash memory. The ECU stores approximately **80-90 hours** of flight time in a ring buffer, always keeping the most recent data. Depending on flight activity, this can include dozens of sessions spanning weeks or months.
 
 ## Understanding the Output
 
@@ -189,16 +202,43 @@ The Austro Engine AE300 is a 168 HP turbocharged diesel (Jet-A) aircraft engine 
 Yes, to download the hex dump from the aircraft's ECU. AustroView processes the resulting `.ae3` files on your own computer.
 
 **How much data does one file contain?**
-A single hex dump can contain weeks or months of flight data depending on flight frequency. The ECU's flash memory holds approximately 120+ sessions before older data is overwritten.
+A single hex dump can contain weeks or months of flight data depending on flight frequency. The ECU's flash memory (RecMng-Flash) stores approximately **80-90 hours** of engine-on time in a ring buffer, always keeping the most recent data.
 
 **Are both ECUs recorded?**
 The AE300 has dual ECUs (A and B). Each ECU records its own data log independently. You would get separate `.ae3` files for each ECU.
 
 **What do the Engine Status values mean?**
-The Engine Status field contains binary status flags from the ECU. Common values: `18` = normal idle/ground, higher values indicate various engine states. These are internal ECU status codes.
+The Engine Status field is a combined bit mask (shown as a decimal number in the CSV). Each bit indicates a specific ECU state (from the AE300 Wizard Manual, Appendix 12.2.1):
+
+| Bit | Value | Meaning |
+|-----|-------|---------|
+| 0   | 1     | Engine in "afterrun" state |
+| 1   | 2     | Engine in "start" state |
+| 2   | 4     | Engine in "normal" running state |
+| 3   | 8     | Rail pressure governing via metering unit |
+| 4   | 16    | Squat switch depressed (weight on wheels = aircraft on ground) |
+| 5   | 32    | Proposed active ECU (0 = ECU-A, 1 = ECU-B) |
+| 6   | 64    | Voter decision (0 = ECU-A, 1 = ECU-B) |
+| 7   | 128   | ECU is passive (1) or active (0) |
+
+Common values: `18` (decimal) = bits 1+4 = engine starting + on ground. `28` (decimal) = bits 2+3+4 = normal running + rail pressure governing + on ground. `12` = bits 2+3 = normal running + rail pressure governing (airborne -- squat switch released).
+
+**What about the LiveView recordings?**
+The AE300 Wizard also has a **LiveView** feature (Section 8.3) that can record up to 52 signals per ECU in standard mode or 158 signals in expert mode, at intervals as fast as 0.1 seconds. These recordings are saved as `LiveView_YYYYMMDD.ae3` files. AustroView does not currently parse LiveView files, but support could be added in a future version since they use the same file format. Note that LiveView requires a live connection to the ECU and is for **ground testing only** -- the Wizard manual states that using it during flight is not permitted.
 
 **Can I use this data for maintenance decisions?**
 This data can help you and your mechanic understand engine trends and behavior. However, **all maintenance decisions must be made by qualified personnel** using approved procedures and documentation. See the disclaimer at the top of this page.
+
+**How do I interpret barometric pressure as altitude?**
+The Ambient Air Pressure channel (measured inside the EECU enclosure) can be roughly converted to pressure altitude using the ISA standard atmosphere. For example: 1013 hPa = sea level, 977 hPa ~ 1000 ft, 915 hPa ~ 2800 ft. A drop in barometric pressure during a session indicates the aircraft is climbing.
+
+**What does a value of -273.1 mean for temperature channels?**
+This is the raw sensor reading before the ECU has initialized -- it corresponds to 0 on the raw scale with the temperature offset applied (0 * 0.1 - 273.14 = -273.1). It clears up within seconds of engine start as the sensors come online.
+
+## References
+
+- **AE300 Wizard Software & Manual** -- [Diamond Aircraft Partners Portal](https://partners.diamondaircraft.com/s/files) > Engine Documentation & Software > AE300-Wizard
+- **AE300 Wizard User Guide** -- Document E4.08.09, Revision 14 (2023-Jul-31), Austro Engine GmbH
 
 ## License
 
