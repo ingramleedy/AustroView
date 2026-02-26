@@ -231,7 +231,8 @@ The AE300 has dual ECUs (A and B). LiveView can record signals from both ECUs si
 
 Below is the full list of signals available through LiveView, organized by category. The **Unit** column shows the physical unit after conversion from the ECU's raw values.
 
-#### Pressures & Fluid Levels
+<details>
+<summary><strong>Pressures & Fluid Levels</strong> (13 signals)</summary>
 
 | Signal | Unit |
 |--------|------|
@@ -249,7 +250,10 @@ Below is the full list of signals available through LiveView, organized by categ
 | Rail pressure, peak value (last 10 ms) | bar |
 | Rail pressure, sensor raw voltage | mV |
 
-#### Temperatures
+</details>
+
+<details>
+<summary><strong>Temperatures</strong> (16 signals)</summary>
 
 | Signal | Unit |
 |--------|------|
@@ -270,7 +274,10 @@ Below is the full list of signals available through LiveView, organized by categ
 | Intake air temperature, rate of change | deg C/s |
 | Intake air temperature, raw sensor value | mV |
 
-#### Engine Speed & Position
+</details>
+
+<details>
+<summary><strong>Engine Speed & Position</strong> (12 signals)</summary>
 
 | Signal | Unit |
 |--------|------|
@@ -287,7 +294,10 @@ Below is the full list of signals available through LiveView, organized by categ
 | Propeller speed | rpm |
 | Propeller speed, set point | rpm |
 
-#### Power, Torque & Load
+</details>
+
+<details>
+<summary><strong>Power, Torque & Load</strong> (11 signals)</summary>
 
 | Signal | Unit |
 |--------|------|
@@ -303,7 +313,10 @@ Below is the full list of signals available through LiveView, organized by categ
 | Torque, limitation | Nm |
 | Torque, set value after limitation | Nm |
 
-#### Fuel Injection
+</details>
+
+<details>
+<summary><strong>Fuel Injection</strong> (8 signals)</summary>
 
 | Signal | Unit |
 |--------|------|
@@ -316,7 +329,10 @@ Below is the full list of signals available through LiveView, organized by categ
 | Injection, Pilot 1 release state | bin |
 | Injection, Pilot 2 release state | bin |
 
-#### Metering Unit (Fuel)
+</details>
+
+<details>
+<summary><strong>Metering Unit (Fuel)</strong> (5 signals)</summary>
 
 | Signal | Unit |
 |--------|------|
@@ -326,7 +342,10 @@ Below is the full list of signals available through LiveView, organized by categ
 | Metering unit, duty cycle set value | % |
 | Metering unit, electrical current set point | mA |
 
-#### Boost Pressure Control
+</details>
+
+<details>
+<summary><strong>Boost Pressure Control</strong> (10 signals)</summary>
 
 | Signal | Unit |
 |--------|------|
@@ -341,7 +360,10 @@ Below is the full list of signals available through LiveView, organized by categ
 | BPA, coordinator output | % |
 | BPA, correction value | % |
 
-#### Propeller Governor
+</details>
+
+<details>
+<summary><strong>Propeller Governor</strong> (6 signals)</summary>
 
 | Signal | Unit |
 |--------|------|
@@ -352,7 +374,10 @@ Below is the full list of signals available through LiveView, organized by categ
 | Propeller gov. actuator, raw voltage | mV |
 | Propeller governor, current speed deviation | rpm |
 
-#### Rail Pressure Control
+</details>
+
+<details>
+<summary><strong>Rail Pressure Control</strong> (12 signals)</summary>
 
 | Signal | Unit |
 |--------|------|
@@ -369,7 +394,10 @@ Below is the full list of signals available through LiveView, organized by categ
 | Rail pressure, governor type | bin |
 | Rail pressure, set point | bar |
 
-#### Idle Governor
+</details>
+
+<details>
+<summary><strong>Idle Governor</strong> (4 signals)</summary>
 
 | Signal | Unit |
 |--------|------|
@@ -378,7 +406,10 @@ Below is the full list of signals available through LiveView, organized by categ
 | Idle governor, state | - |
 | Idle governor, torque demanded | Nm |
 
-#### Power Lever
+</details>
+
+<details>
+<summary><strong>Power Lever</strong> (5 signals)</summary>
 
 | Signal | Unit |
 |--------|------|
@@ -388,7 +419,10 @@ Below is the full list of signals available through LiveView, organized by categ
 | Power lever sensor 1, raw value | mV |
 | Power lever sensor 2, raw value | mV |
 
-#### Electrical System
+</details>
+
+<details>
+<summary><strong>Electrical System</strong> (8 signals)</summary>
 
 | Signal | Unit |
 |--------|------|
@@ -401,7 +435,10 @@ Below is the full list of signals available through LiveView, organized by categ
 | Voter relay, lowside raw voltage | mV |
 | Sensor supply error flags | bin |
 
-#### Engine State & Starting
+</details>
+
+<details>
+<summary><strong>Engine State & Starting</strong> (12 signals)</summary>
 
 | Signal | Unit |
 |--------|------|
@@ -418,7 +455,10 @@ Below is the full list of signals available through LiveView, organized by categ
 | Squat switch (WoW), state | bin |
 | Power stage diag status | bin |
 
-#### Self-Test
+</details>
+
+<details>
+<summary><strong>Self-Test</strong> (9 signals)</summary>
 
 | Signal | Unit |
 |--------|------|
@@ -432,7 +472,10 @@ Below is the full list of signals available through LiveView, organized by categ
 | Selftest, timeout flags | bin |
 | Selftest, torque demanded | Nm |
 
-#### ECU Information & Run Times
+</details>
+
+<details>
+<summary><strong>ECU Information & Run Times</strong> (13 signals)</summary>
 
 | Signal | Unit |
 |--------|------|
@@ -450,7 +493,10 @@ Below is the full list of signals available through LiveView, organized by categ
 | Pre-Supply pump, output signal | - |
 | Source of last reset | - |
 
-#### Real-Time Clock
+</details>
+
+<details>
+<summary><strong>Real-Time Clock</strong> (9 signals)</summary>
 
 | Signal | Unit |
 |--------|------|
@@ -464,7 +510,10 @@ Below is the full list of signals available through LiveView, organized by categ
 | RTC, current minute | - |
 | RTC, current second | - |
 
-#### CAN Bus & Monitoring
+</details>
+
+<details>
+<summary><strong>CAN Bus & Monitoring</strong> (5 signals)</summary>
 
 | Signal | Unit |
 |--------|------|
@@ -474,7 +523,10 @@ Below is the full list of signals available through LiveView, organized by categ
 | Main relay monitoring, current state | bin |
 | Memory monitoring, status | bin |
 
-#### CAN Bus Mirror Signals
+</details>
+
+<details>
+<summary><strong>CAN Bus Mirror Signals</strong> (11 signals)</summary>
 
 These signals are received from the other ECU (or cockpit displays) via the CAN bus. They mirror the primary sensor readings as seen by the aircraft's avionics:
 
@@ -492,11 +544,16 @@ These signals are received from the other ECU (or cockpit displays) via the CAN 
 | CAN, oil temperature | deg C |
 | CAN, propeller speed | rpm |
 
-#### Other
+</details>
+
+<details>
+<summary><strong>Other</strong> (1 signal)</summary>
 
 | Signal | Unit |
 |--------|------|
 | AUX signal | - |
+
+</details>
 
 ## FAQ
 
