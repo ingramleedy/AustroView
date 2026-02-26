@@ -35,9 +35,26 @@ Each CSV file contains one engine session (engine start to shutdown) with these 
 | Gearbox Oil Temperature   | deg C  | Reduction gearbox oil temperature                                 |
 | Engine Oil Temperature    | deg C  | Engine oil temperature                                            |
 | Prop Actuator Duty Cycle  | %      | Propeller governor actuator duty cycle                            |
-| Engine Status             | bin    | ECU status flags (binary)                                         |
+| Engine Status             | bin    | ECU status flags (binary, see below)                              |
 | Engine Oil Level          | mm     | Oil level sensor reading                                          |
 | Engine Load               | %      | Engine load percentage                                            |
+
+### Engine Status Bit Mask
+
+The Engine Status field is a combined bit mask (shown as a decimal number in the CSV). Each bit indicates a specific ECU state (from the AE300 Wizard Manual, Appendix 12.2.1):
+
+| Bit | Value | Meaning |
+|-----|-------|---------|
+| 0   | 1     | Engine in "afterrun" state |
+| 1   | 2     | Engine in "start" state |
+| 2   | 4     | Engine in "normal" running state |
+| 3   | 8     | Rail pressure governing via metering unit |
+| 4   | 16    | Squat switch depressed (weight on wheels = aircraft on ground) |
+| 5   | 32    | Proposed active ECU (0 = ECU-A, 1 = ECU-B) |
+| 6   | 64    | Voter decision (0 = ECU-A, 1 = ECU-B) |
+| 7   | 128   | ECU is passive (1) or active (0) |
+
+Common values: `18` (decimal) = bits 1+4 = engine starting + on ground. `28` (decimal) = bits 2+3+4 = normal running + rail pressure governing + on ground. `12` = bits 2+3 = normal running + rail pressure governing (airborne -- squat switch released).
 
 ## Quick Start
 
@@ -571,22 +588,6 @@ A single hex dump can contain weeks or months of flight data depending on flight
 
 **Are both ECUs recorded?**
 The AE300 has dual ECUs (A and B). Each ECU records its own data log independently. You would get separate `.ae3` files for each ECU.
-
-**What do the Engine Status values mean?**
-The Engine Status field is a combined bit mask (shown as a decimal number in the CSV). Each bit indicates a specific ECU state (from the AE300 Wizard Manual, Appendix 12.2.1):
-
-| Bit | Value | Meaning |
-|-----|-------|---------|
-| 0   | 1     | Engine in "afterrun" state |
-| 1   | 2     | Engine in "start" state |
-| 2   | 4     | Engine in "normal" running state |
-| 3   | 8     | Rail pressure governing via metering unit |
-| 4   | 16    | Squat switch depressed (weight on wheels = aircraft on ground) |
-| 5   | 32    | Proposed active ECU (0 = ECU-A, 1 = ECU-B) |
-| 6   | 64    | Voter decision (0 = ECU-A, 1 = ECU-B) |
-| 7   | 128   | ECU is passive (1) or active (0) |
-
-Common values: `18` (decimal) = bits 1+4 = engine starting + on ground. `28` (decimal) = bits 2+3+4 = normal running + rail pressure governing + on ground. `12` = bits 2+3 = normal running + rail pressure governing (airborne -- squat switch released).
 
 **What about the LiveView recordings?**
 The AE300 Wizard also has a **LiveView** feature (Section 8.3) that can record up to 52 signals per ECU in standard mode or 158 signals in expert mode, at intervals as fast as 0.1 seconds. These recordings are saved as `LiveView_YYYYMMDD.ae3` files. AustroView does not currently parse LiveView files, but support could be added in a future version since they use the same file format. Note that LiveView requires a live connection to the ECU and is for **ground testing only** -- the Wizard manual states that using it during flight is not permitted.
